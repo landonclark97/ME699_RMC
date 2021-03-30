@@ -30,3 +30,5 @@ The error norm in the case of :
 * Computed Torque Control is 0.00049
 
 Generally, increasing $k_p$ tends to decrease the error, however care has to be taken to not keep $k_d$ too small as smaller k_d would lead to oscillations in the transitent response.
+
+Acknowledgements:  I thank Landon and Huitao for assisting me with the general approach towards the assignment and debugging of the code
