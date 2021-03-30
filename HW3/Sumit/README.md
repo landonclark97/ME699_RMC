@@ -6,6 +6,7 @@
     * PD control without tracking 
     * PD control with tracking 
     * Computed Torque Control
+* Note that in the code q_d is the desired joint angle at current time and qd is the final desired joint angle
     
 ## Cubic interpolation / cubic spline trajectory
 * For this assignment I use cubic interpolation to generate the desired trajectory $q$, $\dot{q}$, and $\ddot{q}$.
