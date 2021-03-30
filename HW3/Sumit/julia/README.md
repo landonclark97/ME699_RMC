@@ -1,6 +1,6 @@
 # Assignment 3
 ## Setup and contenets
-* To perform the simulation, run include("startup.jl") and then include("panda.jl")
+* To perform the simulation, run include("startup.jl") and then include("panda.jl") which are located in the odes folder
 * panda.jl includes the code for:
     * Joint angle trajectory generation using cubic interpolation
     * PD control without tracking 
