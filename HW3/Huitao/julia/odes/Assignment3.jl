@@ -4,6 +4,7 @@ q_d = [0.0;0.0;0.0;0.0;0.0;pi;0.01;0.01;0.01]
 # Question 1, get the traj of q_t,q_dt,q_ddt. With cubic interpolation
 function traj(time)
     # compute the desired joint angle at time t with cubic interpolation
+    # a0 = q_0, a1=0,a2=3/2*(q_d-q_0),a3=1/2(q_0-q_d)
     t = time/10
     q_t = q_0+3/2*(q_d-q_0)*t^2+1/2*(q_0-q_d)*t^3
     q_dt = 3*(q_d-q_0)*t+3/2*(q_0-q_d)*t^2
@@ -11,7 +12,7 @@ function traj(time)
     return q_t,q_dt,q_ddt
 end
 
-
+# Question2, control_PD!
 function control_PD!(τ, t, state)
     kp = diagm([10000,10000, 10000, 10000, 10000, 10000, 10000,10000,10000])
     kd = diagm([1,1, 1, 1, 1, 1, 1,1,1])
@@ -24,6 +25,7 @@ function control_PD!(τ, t, state)
     τ .= map( x -> x < -act_sat ? -act_sat : x,τ)
 end
 
+# Question3, control_CTC!
 function control_CTC!(τ, t, state)
     # proportion to the PD control
     P = 0.4
@@ -76,8 +78,9 @@ plot_sol(p,sol,[colorant"red"],false,"foo.pdf")
 for i in 1:7
     println("final joint angle $i : $(sol[end][i])")
 end
+
 # get the configuration error norm
-print( "$(norm(sol[end][1:7]-q_d[1:7]))")
+print("Final configuration norm : $(norm(sol[end][1:7]-q_d[1:7]))")
 
 # Show plot in browser
 p

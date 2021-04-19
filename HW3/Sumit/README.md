@@ -6,6 +6,7 @@
     * PD control without tracking 
     * PD control with tracking 
     * Computed Torque Control
+* Note that in the code q_d is the desired joint angle at current time and qd is the final desired joint angle
     
 ## Cubic interpolation / cubic spline trajectory
 * For this assignment I use cubic interpolation to generate the desired trajectory $q$, $\dot{q}$, and $\ddot{q}$.
@@ -30,3 +31,5 @@ The error norm in the case of :
 * Computed Torque Control is 0.00049
 
 Generally, increasing $k_p$ tends to decrease the error, however care has to be taken to not keep $k_d$ too small as smaller k_d would lead to oscillations in the transitent response.
+
+Acknowledgements:  I thank Landon and Huitao for assisting me with the general approach towards the assignment and debugging of the code
