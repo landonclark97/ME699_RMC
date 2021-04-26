@@ -26,6 +26,7 @@ class SeaRobot:
                 self.motorJointIDs = [0, 2, 4]
                 self.linkJointIDs = [1, 3, 5]
 
+                # remove initial joint locks
                 maxForce = 0
                 mode = p.VELOCITY_CONTROL
                 for i in range(p.getNumJoints(self.arm)):
@@ -70,6 +71,14 @@ class SeaRobot:
         def get_link_taus(self):
                 return self.link_taus
 
+        def get_link_state(self):
+                pos = []
+                vel = []
+                for i in range(self.link_cnt):
+                        pos.append(self.state[(i*4)+2,0])
+                        vel.append(self.state[(i*4)+3,0])
+                return np.matrix([pos+vel]).T
+
         def reset_state(self):
                 for i in range(self.link_cnt*2):
                         p.resetJointState(self.arm,i,targetValue=0,targetVelocity=0)
@@ -113,7 +122,7 @@ class SeaRobot:
 
         def get_tau_d(self, q_d, qdot_d):
                 Kp = 500
-                Kd = 1
+                Kd = 0.5
 
                 G = self.gravity_vector()
 
@@ -121,35 +130,49 @@ class SeaRobot:
                 for i in range(self.link_cnt):
                         q = self.state[(i*4)+2,0]
                         qdot = self.state[(i*4)+3,0]
-                        # taus.append(max(min(Kp*(q_d[i,0]-q)+Kd*(qdot_d[i,0]-qdot),50),-50))
-                        taus.append(Kp*(q_d[i,0]-q)+Kd*(qdot_d[i,0]-qdot))
+                        taus.append(max(min(Kp*(q_d[i,0]-q)+Kd*(qdot_d[i,0]-qdot),100),-100))
+                        # taus.append(Kp*(q_d[i,0]-q)+Kd*(qdot_d[i,0]-qdot))
                         # taus[i] += G[i]
 
 
                 return np.matrix([taus]).T
-
-        def gravity_vector(self):
-
-                zero_list = [0]*self.link_cnt*2
-                G = p.calculateInverseDynamics(self.arm,
-                                               objPositions=self.get_joint_pos_list(),
-                                               objVelocities=zero_list,
-                                               objAccelerations=zero_list)
-                G = [G[i] for i in range(len(G)) if i%2 == 1]
-                return G
-
-        def Jm(self):
-                Jm = p.calculateMassMatrix(self.arm,
-                                           objPositions=self.get_joint_pos_list())
-                Jm = np.matrix(Jm)
-                print(Jm)
-
 
         def control(self, taus):
                 p.setJointMotorControlArray(self.arm,
                                             self.motorJointIDs,
                                             controlMode=p.TORQUE_CONTROL,
                                             forces=taus)
+
+
+
+
+## ENVIRONMENT INIT: ########################
+p.connect(p.GUI)
+p.setAdditionalSearchPath(pybullet_data.getDataPath())
+
+p.setGravity(0,0,-9.8)
+
+p.setRealTimeSimulation(0)
+time_step = 0.001
+p.setTimeStep(time_step)
+
+robot = SeaRobot([500,537,521])
+t = 0
+traj_time = 2
+
+
+
+# s = [random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi)]
+# g = [random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi)]
+s = [0, 0, 0]
+g = [0, -math.pi/2, math.pi/4]
+
+q0 = robot.get_link_pos()
+qd = np.matrix([g]).T
+
+robot.set_state(s)
+#############################################
+
 
 
 def traj(t, q0, qd):
@@ -167,105 +190,71 @@ def traj(t, q0, qd):
 
 
 
-if __name__ == '__main__':
+def refresh_env():
+        global t
+        global s
+        global g
+        global q0
+        global qd
+
+        t = 0
+
+        # s = [random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi)]
+        # g = [random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi)]
+        s = [0, 0, 0]
+        g = [0, -math.pi/2, math.pi/4]
+
+        q0 = robot.get_link_pos()
+        qd = np.matrix([g]).T
+
+        robot.set_state(s)
 
 
-
-        time_step = 0.001
-
-        p.connect(p.GUI)
-        p.setAdditionalSearchPath(pybullet_data.getDataPath())
-
-        p.setGravity(0,0,-9.8)
-
-        p.setRealTimeSimulation(0)
-        p.setTimeStep(time_step)
-
-        robot = SeaRobot([500,537,521])
-
-        def step_world():
-                robot.step_robot()
-                p.stepSimulation()
-                time.sleep(time_step)
-                robot.update()
-
-        # box = p.loadURDF("cube_small.urdf",[3,0,2],globalScaling=15)
-        # p.changeDynamics(box,-1,mass=200)
-
-        # p.loadURDF("plane.urdf", [0, 0, 0])
-
-        tau_tracker = []
-        tau_d_tracker = []
-
-        reset = False
-
-        def custom_loss(y, y_pred):
-
-                loss = np.cbrt(y-y_pred)*20
-                print('loss: {}'.format(np.sum(np.abs(loss))))
-                return loss
+def reward(y, y_hat):
+        summ = np.sum(np.abs(y[0:3]-y_hat[0:3]))
+        if summ == 0.0:
+                summ = 0.001
+        return 10*(1.0/summ)-2.5
 
 
-        nn = Perceiver([[15,250],[250,250],[250,3]],
-                       activation=[linear_unfiltered,ReLU,ReLU,linear],
-                       d_activation=[d_linear_unfiltered,d_ReLU,d_ReLU,d_linear],
-                       loss=custom_loss,
-                       lr=0.05)
+def env_state():
+        state = np.matrix([[0]*12],dtype='float64').T
+        q_d, qdot_d, _ = traj(t/traj_time, q0, qd)
+        goal = np.matrix([q_d.T.tolist()[0]+qdot_d.T.tolist()[0]]).T
+
+        state[0:12,0] = robot.get_state()
+        # state[12:18,0] = goal
+        # state[12:15,0] = qd
+
+        state = np.squeeze(np.asarray((state)))
+        return state
 
 
+def step_env(x):
+        global t
 
-        state = np.matrix([[0]*15]).T
-        goal = np.matrix([[0]*3]).T
+        q_d, qdot_d, _ = traj(t/traj_time, q0, qd)
 
-        states = np.matrix([[0]*15]).T
-        goals = np.matrix([[0]*3]).T
+        # goal = np.matrix([q_d.T.tolist()[0]+qdot_d.T.tolist()[0]]).T
+        goal = qd
 
-        plt.axis([0,10,0,1])
+        done = False
 
-        plot = False
+        robot.control(x)
+        robot.step_robot()
+        p.stepSimulation()
+        robot.update()
 
-        while 1:
+        t += time_step
 
-                t = 0
-                s = [random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi)]
-                g = [random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi)]
+        next_state = env_state()
+        actual = robot.get_link_state()
 
-                qd = np.matrix([g]).T
 
-                robot.set_state(s)
-                reset = False
+        if t >= traj_time:
+                done = True
+                refresh_env()
 
-                q0 = robot.get_link_pos()
+        r = reward(actual, goal)
 
-                while t < 5:
-
-                        if len(tau_tracker) > 0 and plot:
-                                plt.clf()
-                                x = np.linspace(0,len(tau_tracker),len(tau_tracker))
-                                plt.plot(x,tau_tracker)
-                                plt.plot(x,tau_d_tracker)
-                                plt.pause(0.00001)
-
-                        q_d, qdot_d, _ = traj(t/5, q0, qd)
-
-                        goal = robot.get_tau_d(q_d,qdot_d)
-
-                        state[0:12,:] = robot.get_state()
-                        state[12:15,:] = goal
-
-                        states = np.concatenate((states, state),axis=1)
-
-                        tau, _ = nn.predict(state)
-
-                        robot.control(tau)
-                        step_world()
-
-                        actual = robot.get_link_taus()
-
-                        goals = np.concatenate((goals, actual),axis=1)
-
-                        t += time_step
-
-                nn.train(states,goals,epochs=2,batch_size=100)
-
-        plt.show()
+        return next_state, r, done
