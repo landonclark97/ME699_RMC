@@ -5,11 +5,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+tf.compat.v1.reset_default_graph()
+config = tf.compat.v1.ConfigProto(allow_soft_placement=True,
+                        intra_op_parallelism_threads=1,
+                        inter_op_parallelism_threads=1)
+config.gpu_options.allow_growth = True
+sess = tf.compat.v1.Session(config=config)
+
 num_states = 12
 num_actions = 3
 
-upper_bound = 50
-lower_bound = -50
+upper_bound = 1000
+lower_bound = -upper_bound
 
 
 class OUActionNoise:
@@ -135,12 +142,13 @@ def get_actor():
     last_init = tf.random_uniform_initializer(minval=-0.00003, maxval=0.00003)
 
     inputs = layers.Input(shape=(num_states,))
-    in_norm = layers.BatchNormalization()(inputs)
-    out = layers.Dense(324, activation="relu")(in_norm)
-    out = layers.Dense(324, activation="relu")(out)
-    outputs = layers.Dense(3, activation="tanh", kernel_initializer=last_init)(out)
+    # in_norm = layers.BatchNormalization()(inputs)
+    buff = layers.Dense(30, activation="linear")
+    out = layers.Dense(524, activation="tanh")(inputs)
+    out = layers.Dense(524, activation="tanh")(out)
+    outputs = layers.Dense(3, activation="linear", kernel_initializer=last_init)(out)
 
-    outputs = outputs * upper_bound
+    # outputs = outputs * upper_bound
     model = tf.keras.Model(inputs, outputs)
     return model
 
@@ -148,19 +156,19 @@ def get_actor():
 def get_critic():
     # State as input
     state_input = layers.Input(shape=(num_states))
-    state_norm = layers.BatchNormalization()(state_input)
-    state_out = layers.Dense(20, activation="relu")(state_norm)
-    state_out = layers.Dense(32, activation="relu")(state_out)
+    # state_norm = layers.BatchNormalization()(state_input)
+    state_out = layers.Dense(20, activation="linear")(state_input)
+    state_out = layers.Dense(32, activation="tanh")(state_out)
 
     # Action as input
     action_input = layers.Input(shape=(num_actions))
-    action_out = layers.Dense(32, activation="relu")(action_input)
+    action_out = layers.Dense(32, activation="linear")(action_input)
 
     # Both are passed through seperate layer before concatenating
     concat = layers.Concatenate()([state_out, action_out])
 
-    out = layers.Dense(324, activation="relu")(concat)
-    out = layers.Dense(324, activation="relu")(out)
+    out = layers.Dense(524, activation="tanh")(concat)
+    out = layers.Dense(524, activation="relu")(out)
     outputs = layers.Dense(1)(out)
 
     # Outputs single value for give state-action
@@ -191,7 +199,7 @@ def policy(state, noise_object):
 
 
 if __name__ == '__main__':
-    std_dev = 0.2
+    std_dev = 5.0
     ou_noise = OUActionNoise(mean=np.zeros(3), std_deviation=float(std_dev) * np.ones(3))
 
     actor_model = get_actor()
@@ -228,7 +236,7 @@ if __name__ == '__main__':
     for ep in range(total_episodes):
 
 
-        prev_state = env.env_state()
+        prev_state = env.state()
         episodic_reward = 0
 
         i = 0
@@ -242,9 +250,8 @@ if __name__ == '__main__':
 
             action = policy(tf_prev_state, ou_noise)[0]
             # Recieve state and reward from environment.
-            state, reward, done = env.step_env(action)
-            print('\r' + '  '*40, end = '')
-            print(f'\r {i}: {action}, {reward}', end='')
+            state, reward, done = env.step(action)
+            print(f'\r {i}: {action}, {reward}' + '  '*30, end='')
 
             buffer.record((prev_state, action, reward, state))
             episodic_reward += reward
@@ -255,6 +262,7 @@ if __name__ == '__main__':
 
             # End this episode when `done` is True
             if done:
+                env.reset()
                 break
 
             prev_state = state

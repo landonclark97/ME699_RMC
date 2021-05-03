@@ -8,11 +8,12 @@ import numpy as np
 
 import pybullet_data
 
-from perceptron import *
-
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
+
+observation_space = np.empty((12,1))
+action_space = np.empty((3,1))
 
 
 class SeaRobot:
@@ -164,8 +165,8 @@ traj_time = 2
 
 # s = [random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi)]
 # g = [random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi)]
-s = [0, 0, 0]
-g = [0, -math.pi/2, math.pi/4]
+g = [0, 0, 0]
+s = [0, -math.pi/2, -math.pi/4, 0.0, 0.0, 0.0]
 
 q0 = robot.get_link_pos()
 qd = np.matrix([g]).T
@@ -190,7 +191,7 @@ def traj(t, q0, qd):
 
 
 
-def refresh_env():
+def reset():
         global t
         global s
         global g
@@ -201,26 +202,33 @@ def refresh_env():
 
         # s = [random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi)]
         # g = [random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi), random.uniform(-math.pi,math.pi)]
-        s = [0, 0, 0]
-        g = [0, -math.pi/2, math.pi/4]
+        g = [0, 0, 0]
+        s = [0.0, -math.pi/2, -math.pi/4, 0.0, 0.0, 0.0]
 
         q0 = robot.get_link_pos()
         qd = np.matrix([g]).T
 
         robot.set_state(s)
+        return state()
 
 
 def reward(y, y_hat):
-        summ = np.sum(np.abs(y[0:3]-y_hat[0:3]))
+        reward_offset = 0
+        p_summ = np.sum(np.abs(y[0:3]-y_hat[0:3]))
+        # v_summ = 2.75*np.sum(np.abs(y[3:6]-y_hat[3:6]))
+        # summ = (p_summ + v_summ)/3.0
+        summ = p_summ
+        if summ < 2.0:
+                reward_offset = 1.2*(2.0-summ)
         if summ == 0.0:
                 summ = 0.001
-        return 10*(1.0/summ)-2.5
+        return (1.0/summ)**2+reward_offset
 
 
-def env_state():
+def state():
         state = np.matrix([[0]*12],dtype='float64').T
-        q_d, qdot_d, _ = traj(t/traj_time, q0, qd)
-        goal = np.matrix([q_d.T.tolist()[0]+qdot_d.T.tolist()[0]]).T
+        # q_d, qdot_d, _ = traj(t/traj_time, q0, qd)
+        # goal = np.matrix([q_d.T.tolist()[0]+qdot_d.T.tolist()[0]]).T
 
         state[0:12,0] = robot.get_state()
         # state[12:18,0] = goal
@@ -230,10 +238,10 @@ def env_state():
         return state
 
 
-def step_env(x):
+def step(x):
         global t
 
-        q_d, qdot_d, _ = traj(t/traj_time, q0, qd)
+        # q_d, qdot_d, _ = traj(t/traj_time, q0, qd)
 
         # goal = np.matrix([q_d.T.tolist()[0]+qdot_d.T.tolist()[0]]).T
         goal = qd
@@ -247,14 +255,16 @@ def step_env(x):
 
         t += time_step
 
-        next_state = env_state()
+        next_state = state()
         actual = robot.get_link_state()
 
 
+
+        r = reward(goal, actual)
+
         if t >= traj_time:
                 done = True
-                refresh_env()
+                reset()
 
-        r = reward(actual, goal)
 
         return next_state, r, done

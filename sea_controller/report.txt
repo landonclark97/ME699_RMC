@@ -1,0 +1,259 @@
+TensorFlow 2.0 Upgrade Script
+-----------------------------
+Converted 16 files
+Detected 1 issues that require attention
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+File: ./ppo_tf_old/agents/networks.py
+--------------------------------------------------------------------------------
+./ppo_tf_old/agents/networks.py:36:19: WARNING: tf.get_variable requires manual check. tf.get_variable returns ResourceVariables by default in 2.0, which have well-defined semantics and are stricter about shapes. You can disable this behavior by passing use_resource=False, or by calling tf.compat.v1.disable_resource_variables().
+================================================================================
+Detailed log follows:
+
+================================================================================
+================================================================================
+Input tree: './ppo_tf_old'
+================================================================================
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/main.py'
+ outputting to './ppo_tf_new/main.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/trainer.py'
+ outputting to './ppo_tf_new/trainer.py'
+--------------------------------------------------------------------------------
+
+117:17: INFO: Renamed 'tf.ConfigProto' to 'tf.compat.v1.ConfigProto'
+121:20: INFO: Renamed 'tf.Session' to 'tf.compat.v1.Session'
+130:29: INFO: Renamed 'tf.global_variables_initializer' to 'tf.compat.v1.global_variables_initializer'
+130:64: INFO: Renamed 'tf.local_variables_initializer' to 'tf.compat.v1.local_variables_initializer'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/environment.py'
+ outputting to './ppo_tf_new/environment.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/log-files/sea_robot/May-02_17:15:41/main.py'
+ outputting to './ppo_tf_new/log-files/sea_robot/May-02_17:15:41/main.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/log-files/sea_robot/May-02_17:15:41/trainer.py'
+ outputting to './ppo_tf_new/log-files/sea_robot/May-02_17:15:41/trainer.py'
+--------------------------------------------------------------------------------
+
+117:17: INFO: Renamed 'tf.ConfigProto' to 'tf.compat.v1.ConfigProto'
+121:20: INFO: Renamed 'tf.Session' to 'tf.compat.v1.Session'
+130:29: INFO: Renamed 'tf.global_variables_initializer' to 'tf.compat.v1.global_variables_initializer'
+130:64: INFO: Renamed 'tf.local_variables_initializer' to 'tf.compat.v1.local_variables_initializer'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/log-files/sea_robot/May-02_17:15:41/environment.py'
+ outputting to './ppo_tf_new/log-files/sea_robot/May-02_17:15:41/environment.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/log-files/sea_robot/May-02_17:14:09/main.py'
+ outputting to './ppo_tf_new/log-files/sea_robot/May-02_17:14:09/main.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/log-files/sea_robot/May-02_17:14:09/trainer.py'
+ outputting to './ppo_tf_new/log-files/sea_robot/May-02_17:14:09/trainer.py'
+--------------------------------------------------------------------------------
+
+116:8: INFO: Renamed 'tf.reset_default_graph' to 'tf.compat.v1.reset_default_graph'
+117:17: INFO: Renamed 'tf.ConfigProto' to 'tf.compat.v1.ConfigProto'
+121:20: INFO: Renamed 'tf.Session' to 'tf.compat.v1.Session'
+130:29: INFO: Renamed 'tf.global_variables_initializer' to 'tf.compat.v1.global_variables_initializer'
+130:64: INFO: Renamed 'tf.local_variables_initializer' to 'tf.compat.v1.local_variables_initializer'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/log-files/sea_robot/May-02_17:14:09/environment.py'
+ outputting to './ppo_tf_new/log-files/sea_robot/May-02_17:14:09/environment.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/agents/actor_function.py'
+ outputting to './ppo_tf_new/agents/actor_function.py'
+--------------------------------------------------------------------------------
+
+42:22: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+43:22: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+44:29: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+46:23: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+47:22: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+49:21: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+51:31: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+52:28: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+60:22: INFO: Added keywords to args of function 'tf.reduce_sum'
+61:23: INFO: Added keywords to args of function 'tf.reduce_sum'
+65:26: INFO: Added keywords to args of function 'tf.reduce_sum'
+66:27: INFO: Added keywords to args of function 'tf.reduce_sum'
+72:26: INFO: Added keywords to args of function 'tf.reduce_sum'
+73:26: INFO: Added keywords to args of function 'tf.reduce_sum'
+74:21: INFO: Added keywords to args of function 'tf.reduce_sum'
+76:24: INFO: Added keywords to args of function 'tf.reduce_mean'
+77:39: INFO: Added keywords to args of function 'tf.reduce_sum'
+83:30: INFO: Added keywords to args of function 'tf.reduce_sum'
+91:25: INFO: Added keywords to args of function 'tf.reduce_mean'
+95:21: INFO: Added keywords to args of function 'tf.reduce_mean'
+98:20: INFO: Added keywords to args of function 'tf.reduce_mean'
+102:20: INFO: Renamed 'tf.train.AdamOptimizer' to 'tf.compat.v1.train.AdamOptimizer'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/agents/archive.py'
+ outputting to './ppo_tf_new/agents/archive.py'
+--------------------------------------------------------------------------------
+
+102:24: INFO: Renamed 'tf.global_variables_initializer' to 'tf.compat.v1.global_variables_initializer'
+106:22: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+107:22: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+108:29: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+109:23: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+110:22: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+111:31: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+112:28: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+116:14: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+117:49: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+117:49: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+120:14: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+121:49: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+121:49: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+124:14: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+125:49: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+125:49: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+128:21: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+129:56: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+129:56: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+132:24: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+133:59: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+133:59: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+141:23: INFO: Added keywords to args of function 'tf.reduce_sum'
+142:23: INFO: Added keywords to args of function 'tf.reduce_sum'
+147:27: INFO: Added keywords to args of function 'tf.reduce_sum'
+148:27: INFO: Added keywords to args of function 'tf.reduce_sum'
+157:26: INFO: Added keywords to args of function 'tf.reduce_sum'
+158:26: INFO: Added keywords to args of function 'tf.reduce_sum'
+159:21: INFO: Added keywords to args of function 'tf.reduce_sum'
+161:24: INFO: Added keywords to args of function 'tf.reduce_mean'
+162:39: INFO: Added keywords to args of function 'tf.reduce_sum'
+166:30: INFO: Added keywords to args of function 'tf.reduce_mean'
+166:45: INFO: Added keywords to args of function 'tf.reduce_sum'
+171:58: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+175:17: INFO: Added keywords to args of function 'tf.reduce_mean'
+177:16: INFO: Added keywords to args of function 'tf.reduce_mean'
+181:20: INFO: Renamed 'tf.train.MomentumOptimizer' to 'tf.compat.v1.train.MomentumOptimizer'
+186:20: INFO: Renamed 'tf.Session' to 'tf.compat.v1.Session'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/agents/networks.py'
+ outputting to './ppo_tf_new/agents/networks.py'
+--------------------------------------------------------------------------------
+
+21:14: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+22:49: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+22:49: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+24:14: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+25:49: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+25:49: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+27:14: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+28:49: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+28:49: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+30:21: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+31:56: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+31:56: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+36:19: WARNING: tf.get_variable requires manual check. tf.get_variable returns ResourceVariables by default in 2.0, which have well-defined semantics and are stricter about shapes. You can disable this behavior by passing use_resource=False, or by calling tf.compat.v1.disable_resource_variables().
+36:19: INFO: Renamed 'tf.get_variable' to 'tf.compat.v1.get_variable'
+37:35: INFO: tf.constant_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+37:35: INFO: Renamed 'tf.constant_initializer' to 'tf.compat.v1.constant_initializer'
+38:24: INFO: Added keywords to args of function 'tf.reduce_sum'
+43:28: INFO: Renamed 'tf.random_normal' to 'tf.random.normal'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/agents/value_function.py'
+ outputting to './ppo_tf_new/agents/value_function.py'
+--------------------------------------------------------------------------------
+
+24:22: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+25:22: INFO: Renamed 'tf.placeholder' to 'tf.compat.v1.placeholder'
+37:14: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+38:49: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+38:49: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+40:14: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+41:49: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+41:49: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+43:14: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+44:49: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+44:49: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+46:14: INFO: Renamed 'tf.layers.dense' to 'tf.compat.v1.layers.dense'
+47:49: INFO: tf.random_normal_initializer requires manual check. Initializers no longer have the dtype argument in the constructor or partition_info argument in the __call__ method.
+The calls have been converted to compat.v1 for safety (even though they may already have been correct).
+47:49: INFO: Renamed 'tf.random_normal_initializer' to 'tf.compat.v1.random_normal_initializer'
+50:20: INFO: Added keywords to args of function 'tf.reduce_mean'
+51:20: INFO: Renamed 'tf.train.AdamOptimizer' to 'tf.compat.v1.train.AdamOptimizer'
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/common/plotting.py'
+ outputting to './ppo_tf_new/common/plotting.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/common/utils.py'
+ outputting to './ppo_tf_new/common/utils.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+Processing file './ppo_tf_old/common/plot_fn.py'
+ outputting to './ppo_tf_new/common/plot_fn.py'
+--------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
+
