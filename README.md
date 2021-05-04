@@ -19,5 +19,5 @@
 * round one paper reviews can be found in the corresponding folder, with a subfolder for each member of our group.
 
 ## Final Project, SEA Controller:
-* project aimed at controlling a SEA robot with reinforcement learning algorithms.
+* project aimed at controlling an SEA robot with reinforcement learning algorithms.
 * final project code can be found in the sea_controller directory.
