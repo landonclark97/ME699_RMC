@@ -211,23 +211,20 @@ def reset():
         robot.set_state(s)
         return state()
 
-
 def reward(y, y_hat):
         reward_offset = 0
         p_summ = np.sum(np.abs(y[0:3]-y_hat[0:3]))
         # v_summ = 2.75*np.sum(np.abs(y[3:6]-y_hat[3:6]))
         # summ = (p_summ + v_summ)/3.0
         summ = p_summ
-        if summ < 2.0:
-                reward_offset = 1.1*(2.0-summ)
+        if summ < 2.5:
+                reward_offset = 1.2*(2.5-summ)
         if summ == 0.0:
                 summ = 0.001
         return (1.0/summ)**2+reward_offset
 
-
 def state():
         state = np.matrix([[0]*12],dtype='float64').T
-        # q_d, qdot_d, _ = traj(t/traj_time, q0, qd)
         # goal = np.matrix([q_d.T.tolist()[0]+qdot_d.T.tolist()[0]]).T
 
         state[0:12,0] = robot.get_state()
@@ -241,7 +238,6 @@ def state():
 def step(x):
         global t
 
-        # q_d, qdot_d, _ = traj(t/traj_time, q0, qd)
 
         # goal = np.matrix([q_d.T.tolist()[0]+qdot_d.T.tolist()[0]]).T
         goal = qd

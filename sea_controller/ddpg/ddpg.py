@@ -15,7 +15,7 @@ sess = tf.compat.v1.Session(config=config)
 num_states = 12
 num_actions = 3
 
-upper_bound = 1000
+upper_bound = 250
 lower_bound = -upper_bound
 
 
@@ -148,7 +148,7 @@ def get_actor():
     out = layers.Dense(524, activation="tanh")(out)
     outputs = layers.Dense(3, activation="linear", kernel_initializer=last_init)(out)
 
-    # outputs = outputs * upper_bound
+    outputs = outputs * upper_bound
     model = tf.keras.Model(inputs, outputs)
     return model
 
@@ -199,7 +199,7 @@ def policy(state, noise_object):
 
 
 if __name__ == '__main__':
-    std_dev = 5.0
+    std_dev = 10.0
     ou_noise = OUActionNoise(mean=np.zeros(3), std_deviation=float(std_dev) * np.ones(3))
 
     actor_model = get_actor()
@@ -219,18 +219,20 @@ if __name__ == '__main__':
     critic_optimizer = tf.keras.optimizers.Adam(critic_lr)
     actor_optimizer = tf.keras.optimizers.Adam(actor_lr)
 
-    total_episodes = 100
+    total_episodes = 1
     # Discount factor for future rewards
     gamma = 0.99
     # Used to update target networks
-    tau = 0.005
+    tau = 0.001
 
-    buffer = Buffer(50000, 64)
+    buffer = Buffer(100000, 64)
 
     # To store reward history of each episode
     ep_reward_list = []
     # To store average reward history of last few episodes
     avg_reward_list = []
+
+    j1_taus = []
 
     # Takes about 4 min to train
     for ep in range(total_episodes):
@@ -249,6 +251,8 @@ if __name__ == '__main__':
             tf_prev_state = tf.expand_dims(tf.convert_to_tensor(prev_state), 0)
 
             action = policy(tf_prev_state, ou_noise)[0]
+            if ep == 0:
+                j1_taus.append(action[1])
             # Recieve state and reward from environment.
             state, reward, done = env.step(action)
             print(f'\r {i}: {action}, {reward}' + '  '*30, end='')
@@ -280,4 +284,10 @@ if __name__ == '__main__':
     plt.plot(avg_reward_list)
     plt.xlabel("Episode")
     plt.ylabel("Avg. Epsiodic Reward")
+    plt.show()
+
+    i_s = [i for i in range(len(j1_taus))]
+    plt.scatter(i_s,j1_taus)
+    plt.xlabel('Time (sec)')
+    plt.ylabel('Joint 1 Motor Torques (Nm)')
     plt.show()
